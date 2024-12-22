@@ -1,4 +1,9 @@
-name: Docker Image CI
+name: Docker
+
+# This workflow uses actions that are not certified by GitHub.
+# They are provided by a third-party and are governed by
+# separate terms of service, privacy policy, and support
+# documentation.
 
 on:
   schedule:
@@ -10,8 +15,10 @@ on:
   pull_request:
     branches: [ "main" ]
 
+
 env:
   DOCKERHUB_REPO: xct258/debian-BililiveRecorder
+
 
 jobs:
 
@@ -28,7 +35,7 @@ jobs:
         run: echo "::set-output name=today::$(date +'%Y-%m-%d_%H-%M')"
 
       - name: Checkout repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@v3
 
       - name: Install cosign
         if: github.event_name != 'pull_request'
