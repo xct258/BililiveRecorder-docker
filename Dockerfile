@@ -8,7 +8,7 @@ ENV TZ=Asia/Shanghai
 
 # 安装必要的依赖项
 RUN apt-get update \
-    && apt-get install -y wget git curl nano jq tar xz-utils \
+    && apt-get install -y wget tar xz-utils \
     && mkdir -p /root/tmp \
     && echo '#!/bin/bash' >> /root/tmp/1.sh \
     && echo 'arch=$(uname -m | grep -i -E "x86_64|aarch64")' >> /root/tmp/1.sh \
@@ -28,7 +28,7 @@ RUN apt-get update \
     && chmod +x /root/BililiveRecorder/BililiveRecorder.Cli \
     && rm -rf /root/tmp \
     && echo '#!/bin/bash' >> /usr/local/bin/start.sh \
-    && echo '/root/BililiveRecorder/BililiveRecorder.Cli run --bind "http://*:2356" --http-basic-user "xct258" --http-basic-pass "vR^u8EKkaoD8fb" "/src"' >> /usr/local/bin/start.sh \
+    && echo '/root/BililiveRecorder/BililiveRecorder.Cli run --bind "http://*:2356" --http-basic-user "xct258" --http-basic-pass "vR^u8EKkaoD8fb" "/rec"' >> /usr/local/bin/start.sh \
     && echo 'tail -f /dev/null' >> /usr/local/bin/start.sh \
     && chmod +x /usr/local/bin/start.sh
 
