@@ -34,15 +34,17 @@ RUN apt-get update \
     && echo '    if [ -z "$HTTP_BASIC_USER" ]; then' >> /usr/local/bin/start.sh \
     && echo '        HTTP_BASIC_USER="xct258"' >> /usr/local/bin/start.sh \
     && echo '        echo HTTP_BASIC_USER="$HTTP_BASIC_USER" >> /root/.credentials' >> /usr/local/bin/start.sh \
-    && echo '        echo "用户名: $HTTP_BASIC_USER"' >> /usr/local/bin/start.sh \
+    && echo '        echo "没有指定用户名，可以通过HTTP_BASIC_USER变量指定，当前用户名:"' >> /usr/local/bin/start.sh \
+    && echo '        echo "$HTTP_BASIC_USER"' >> /usr/local/bin/start.sh \
     && echo '    fi' >> /usr/local/bin/start.sh \
     && echo '    if [ -z "$HTTP_BASIC_PASS" ]; then' >> /usr/local/bin/start.sh \
     && echo '        HTTP_BASIC_PASS=$(openssl rand -base64 12)' >> /usr/local/bin/start.sh \
     && echo '        echo HTTP_BASIC_PASS="$HTTP_BASIC_PASS" >> /root/.credentials' >> /usr/local/bin/start.sh \
-    && echo '        echo "密码: $HTTP_BASIC_PASS"' >> /usr/local/bin/start.sh \
+    && echo '        echo "没有指定密码，可以通过HTTP_BASIC_PASS变量指定，当前密码（随机）:"' >> /usr/local/bin/start.sh \
+    && echo '        echo "$HTTP_BASIC_PASS"' >> /usr/local/bin/start.sh \
     && echo '    fi' >> /usr/local/bin/start.sh \
     && echo 'fi' >> /usr/local/bin/start.sh \
-    && echo '/root/BililiveRecorder/BililiveRecorder.Cli run --bind "http://*:2356" --http-basic-user "$HTTP_BASIC_USER" --http-basic-pass "$HTTP_BASIC_PASS" "/rec"' >> /usr/local/bin/start.sh \
+    && echo '/root/BililiveRecorder/BililiveRecorder.Cli run --bind "http://*:2356" --http-basic-user "$HTTP_BASIC_USER" --http-basic-pass "$HTTP_BASIC_PASS" "/rec" &' >> /usr/local/bin/start.sh \
     && echo 'if [ -f "$FILE_BACKUP_SH" ]; then' >> /usr/local/bin/start.sh \
     && echo '    chmod +x "$FILE_BACKUP_SH"' >> /usr/local/bin/start.sh \
     && echo '    "$FILE_BACKUP_SH" /dev/null 2>&1 &' >> /usr/local/bin/start.sh \
