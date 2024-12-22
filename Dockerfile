@@ -8,7 +8,7 @@ ENV TZ=Asia/Shanghai
 
 # 安装必要的依赖项
 RUN apt-get update \
-    && apt-get install -y wget git curl nano jq tar xz-utils ffmpeg \
+    && apt-get install -y wget git curl nano jq bc tar xz-utils ffmpeg \
     && mkdir -p /root/tmp \
     && echo '#!/bin/bash' >> /root/tmp/1.sh \
     && echo 'arch=$(uname -m | grep -i -E "x86_64|aarch64")' >> /root/tmp/1.sh \
@@ -45,10 +45,10 @@ RUN apt-get update \
     && echo '/root/BililiveRecorder/BililiveRecorder.Cli run --bind "http://*:2356" --http-basic-user "$HTTP_BASIC_USER" --http-basic-pass "$HTTP_BASIC_PASS" "/rec"' >> /usr/local/bin/start.sh \
     && echo 'if [ -f "$FILE_BACKUP_SH" ]; then' >> /usr/local/bin/start.sh \
     && echo '    chmod +x "$FILE_BACKUP_SH"' >> /usr/local/bin/start.sh \
-    && echo '    "$FILE_BACKUP_SH" &' >> /usr/local/bin/start.sh \
+    && echo '    "$FILE_BACKUP_SH" /dev/null 2>&1 &' >> /usr/local/bin/start.sh \
     && echo '    echo "备份脚本执行中"' >> /usr/local/bin/start.sh \
     && echo 'else' >> /usr/local/bin/start.sh \
-    && echo '    echo "备份脚本不存在"' >> /usr/local/bin/start.sh \
+    && echo '    echo "备份脚本不存在，可以通过FILE_BACKUP_SH变量指定一个sh脚本来备份录制的视频"' >> /usr/local/bin/start.sh \
     && echo 'fi' >> /usr/local/bin/start.sh \
     && echo 'tail -f /dev/null' >> /usr/local/bin/start.sh \
     && chmod +x /usr/local/bin/start.sh
