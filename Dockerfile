@@ -32,22 +32,13 @@ RUN apt-get update \
     && echo '    source /root/.credentials' >> /usr/local/bin/start.sh \
     && echo 'else' >> /usr/local/bin/start.sh \
     && echo '    if [ -z "$HTTP_BASIC_USER" ]; then' >> /usr/local/bin/start.sh \
-    && echo '        echo HTTP_BASIC_USER="xct258" >/dev/null 2>&1' >> /usr/local/bin/start.sh \
     && echo '        echo HTTP_BASIC_USER="xct258" >> /root/.credentials' >> /usr/local/bin/start.sh \
-    && echo '        echo "没有指定用户名，使用默认用户名："' >> /usr/local/bin/start.sh \
-    && echo '        echo "$HTTP_BASIC_USER"' >> /usr/local/bin/start.sh \
-    && echo '    else' >> /usr/local/bin/start.sh \
-    && echo '        echo 用户名：' >> /usr/local/bin/start.sh \
-    && echo '        echo "$HTTP_BASIC_USER"' >> /usr/local/bin/start.sh \
+    && echo '        echo "用户名: $HTTP_BASIC_USER"' >> /usr/local/bin/start.sh \
     && echo '    fi' >> /usr/local/bin/start.sh \
     && echo '    if [ -z "$HTTP_BASIC_PASS" ]; then' >> /usr/local/bin/start.sh \
-    && echo '        echo HTTP_BASIC_PASS=$(openssl rand -base64 12)' >> /usr/local/bin/start.sh \
-    && echo '        echo "$HTTP_BASIC_PASS" >> /root/.credentials' >> /usr/local/bin/start.sh \
-    && echo '        echo "没有指定密码，使用随机密码："' >> /usr/local/bin/start.sh \
-    && echo '        echo "$HTTP_BASIC_PASS"' >> /usr/local/bin/start.sh \
-    && echo '    else' >> /usr/local/bin/start.sh \
-    && echo '        echo 密码：' >> /usr/local/bin/start.sh \
-    && echo '        echo "$HTTP_BASIC_PASS"' >> /usr/local/bin/start.sh \
+    && echo '        HTTP_BASIC_PASS=$(openssl rand -base64 12)' >> /usr/local/bin/start.sh \
+    && echo '        echo HTTP_BASIC_PASS="$HTTP_BASIC_PASS" >> /root/.credentials' >> /usr/local/bin/start.sh \
+    && echo '        echo "密码: $HTTP_BASIC_PASS"' >> /usr/local/bin/start.sh \
     && echo '    fi' >> /usr/local/bin/start.sh \
     && echo 'fi' >> /usr/local/bin/start.sh \
     && echo '/root/BililiveRecorder/BililiveRecorder.Cli run --bind "http://*:2356" --http-basic-user "$HTTP_BASIC_USER" --http-basic-pass "$HTTP_BASIC_PASS" "/rec"' >> /usr/local/bin/start.sh \
