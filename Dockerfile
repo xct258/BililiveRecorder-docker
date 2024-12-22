@@ -10,7 +10,7 @@ ENV TZ=Asia/Shanghai
 
 # 安装必要的依赖项
 RUN apt-get update \
-    && apt-get install -y wget git curl nano jq \
+    && apt-get install -y wget git curl nano jq tar \
     && mkdir -p /root/tmp \
     && echo '#!/bin/bash' >> /root/tmp/1.sh \
     && echo arch=$(uname -m | grep -i -E "x86_64|aarch64") >> /root/tmp/1.sh \
