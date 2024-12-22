@@ -33,4 +33,3 @@ RUN apt-get update \
     && chmod +x /usr/local/bin/start.sh
 
 ENTRYPOINT ["/usr/local/bin/start.sh"]
-CMD ["/rec/录播姬视频备份脚本.sh", "&"]
