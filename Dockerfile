@@ -47,7 +47,8 @@ RUN apt-get update \
     && echo '/root/BililiveRecorder/BililiveRecorder.Cli run --bind "http://*:2356" --http-basic-user "$HTTP_BASIC_USER" --http-basic-pass "$HTTP_BASIC_PASS" "/rec" &' >> /usr/local/bin/start.sh \
     && echo 'if [ -f "$FILE_BACKUP_SH" ]; then' >> /usr/local/bin/start.sh \
     && echo '    chmod +x "$FILE_BACKUP_SH"' >> /usr/local/bin/start.sh \
-    && echo '    "$FILE_BACKUP_SH" /dev/null 2>&1 &' >> /usr/local/bin/start.sh \
+    && echo '    echo "$(date +"%Y-%m-%d %H:%M:%S")" > /rec/backup.log' >> /usr/local/bin/start.sh \
+    && echo '    "$FILE_BACKUP_SH" >> backup.log 2>&1' >> /usr/local/bin/start.sh \
     && echo '    echo "备份脚本执行中"' >> /usr/local/bin/start.sh \
     && echo 'else' >> /usr/local/bin/start.sh \
     && echo '    echo "备份脚本不存在，可以通过FILE_BACKUP_SH变量指定一个sh脚本来备份录制的视频"' >> /usr/local/bin/start.sh \
