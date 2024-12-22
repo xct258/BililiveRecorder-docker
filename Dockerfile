@@ -8,7 +8,7 @@ ENV TZ=Asia/Shanghai
 
 # 安装必要的依赖项
 RUN apt-get update \
-    && apt-get install -y wget tar xz-utils \
+    && apt-get install -y wget git curl nano jq tar xz-utils \
     && mkdir -p /root/tmp \
     && echo '#!/bin/bash' >> /root/tmp/1.sh \
     && echo 'arch=$(uname -m | grep -i -E "x86_64|aarch64")' >> /root/tmp/1.sh \
@@ -28,7 +28,27 @@ RUN apt-get update \
     && chmod +x /root/BililiveRecorder/BililiveRecorder.Cli \
     && rm -rf /root/tmp \
     && echo '#!/bin/bash' >> /usr/local/bin/start.sh \
-    && echo '/root/BililiveRecorder/BililiveRecorder.Cli run --bind "http://*:2356" --http-basic-user "xct258" --http-basic-pass "vR^u8EKkaoD8fb" "/rec"' >> /usr/local/bin/start.sh \
+    && echo 'if [ -f /root/.credentials ]; then' >> /usr/local/bin/start.sh \
+    && echo '    source /root/.credentials' >> /usr/local/bin/start.sh \
+    && echo 'else' >> /usr/local/bin/start.sh \
+    && echo '    if [ -z "$HTTP_BASIC_USER" ]; then' >> /usr/local/bin/start.sh \
+    && echo '        echo HTTP_BASIC_USER="xct258" >> /root/.credentials' >> /usr/local/bin/start.sh \
+    && echo '        echo "没有指定用户名，使用默认用户名："' >> /usr/local/bin/start.sh \
+    && echo '        echo "$HTTP_BASIC_USER"' >> /usr/local/bin/start.sh \
+    && echo '    else' >> /usr/local/bin/start.sh \
+    && echo '        echo 用户名：' >> /usr/local/bin/start.sh \
+    && echo '        echo "$HTTP_BASIC_USER"' >> /usr/local/bin/start.sh \
+    && echo '    fi' >> /usr/local/bin/start.sh \
+    && echo '    if [ -z "$HTTP_BASIC_PASS" ]; then' >> /usr/local/bin/start.sh \
+    && echo '        echo HTTP_BASIC_PASS=$(openssl rand -base64 12) >> /root/.credentials' >> /usr/local/bin/start.sh \
+    && echo '        echo "没有指定密码，使用随机密码："' >> /usr/local/bin/start.sh \
+    && echo '        echo "$HTTP_BASIC_PASS"' >> /usr/local/bin/start.sh \
+    && echo '    else' >> /usr/local/bin/start.sh \
+    && echo '        echo 密码：' >> /usr/local/bin/start.sh \
+    && echo '        echo "$HTTP_BASIC_PASS"' >> /usr/local/bin/start.sh \
+    && echo '    fi' >> /usr/local/bin/start.sh \
+    && echo 'fi' >> /usr/local/bin/start.sh \
+    && echo '/root/BililiveRecorder/BililiveRecorder.Cli run --bind "http://*:2356" --http-basic-user "$HTTP_BASIC_USER" --http-basic-pass "$HTTP_BASIC_PASS" "/src"' >> /usr/local/bin/start.sh \
     && echo 'tail -f /dev/null' >> /usr/local/bin/start.sh \
     && chmod +x /usr/local/bin/start.sh
 
