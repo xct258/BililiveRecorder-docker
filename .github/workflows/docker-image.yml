@@ -17,7 +17,7 @@ on:
 
 
 env:
-  DOCKERHUB_REPO: xct258/debian-BililiveRecorder
+  DOCKERHUB_REPO: xct258/debian-bililiverecorder
 
 
 jobs:
