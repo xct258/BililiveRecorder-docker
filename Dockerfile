@@ -51,18 +51,19 @@ RUN apt-get update \
     && echo '    echo "备份脚本执行中"' >> /usr/local/bin/start.sh \
     && echo '    # 创建调度脚本' >> /usr/local/bin/start.sh \
     && echo '    SCHEDULER_SCRIPT="/usr/local/bin/执行视频备份脚本.sh"' >> /usr/local/bin/start.sh \
-    && echo '    cat << 'EOF' > "$SCHEDULER_SCRIPT"' >> /usr/local/bin/start.sh \
+    && echo 'cat << EOF > "$CHEDULER_SCRIPT"' >> /usr/local/bin/start.sh \
     && echo '#!/bin/bash' >> /usr/local/bin/start.sh \
-    && echo 'schedule_sleep_time=04:00' >> /usr/local/bin/start.sh \
+    && echo 'FILE_BACKUP_SH="/rec/录播姬视频备份脚本.sh"' >> /usr/local/bin/start.sh \
+    && echo 'schedule_sleep_time="04:00"' >> /usr/local/bin/start.sh \
     && echo 'while true; do' >> /usr/local/bin/start.sh \
-    && echo '  "$FILE_BACKUP_SH" > /rec/backup.log 2>&1' >> /usr/local/bin/start.sh \
-    && echo '  current_date=$(date +%Y-%m-%d)' >> /usr/local/bin/start.sh \
-    && echo '  target_time="${current_date} $schedule_sleep_time"' >> /usr/local/bin/start.sh \
-    && echo '  time_difference=$(( $(date -d "${target_time}" +%s) - $(date +%s) ))' >> /usr/local/bin/start.sh \
-    && echo '  if [[ ${time_difference} -lt 0 ]]; then' >> /usr/local/bin/start.sh \
-    && echo '  time_difference=$(( ${time_difference} + 86400 ))' >> /usr/local/bin/start.sh \
-    && echo 'fi' >> /usr/local/bin/start.sh \
-    && echo 'sleep ${time_difference}' >> /usr/local/bin/start.sh \
+    && echo '  \$FILE_BACKUP_SH > /rec/backup.log 2>&1' >> /usr/local/bin/start.sh \
+    && echo '  current_date=\$(date +%Y-%m-%d)' >> /usr/local/bin/start.sh \
+    && echo '  target_time="\${current_date} \$schedule_sleep_time"' >> /usr/local/bin/start.sh \
+    && echo '  time_difference=\$(( \$(date -d "\$target_time" +%s) - \$(date +%s) ))' >> /usr/local/bin/start.sh \
+    && echo '  if [[ \$time_difference -lt 0 ]]; then' >> /usr/local/bin/start.sh \
+    && echo '    time_difference=\$(( \$time_difference + 86400 ))' >> /usr/local/bin/start.sh \
+    && echo '  fi' >> /usr/local/bin/start.sh \
+    && echo '  sleep \$time_difference' >> /usr/local/bin/start.sh \
     && echo 'done' >> /usr/local/bin/start.sh \
     && echo 'EOF' >> /usr/local/bin/start.sh \
     && echo '    chmod +x "$SCHEDULER_SCRIPT"' >> /usr/local/bin/start.sh \
