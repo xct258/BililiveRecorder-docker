@@ -51,7 +51,7 @@ RUN apt-get update \
     && echo '    echo "备份脚本执行中"' >> /usr/local/bin/start.sh \
     && echo '    # 创建调度脚本' >> /usr/local/bin/start.sh \
     && echo '    SCHEDULER_SCRIPT="/usr/local/bin/执行视频备份脚本.sh"' >> /usr/local/bin/start.sh \
-    && echo 'cat << EOF > "$CHEDULER_SCRIPT"' >> /usr/local/bin/start.sh \
+    && echo 'cat << EOF > "$SCHEDULER_SCRIPT"' >> /usr/local/bin/start.sh \
     && echo '#!/bin/bash' >> /usr/local/bin/start.sh \
     && echo 'FILE_BACKUP_SH="/rec/录播姬视频备份脚本.sh"' >> /usr/local/bin/start.sh \
     && echo 'schedule_sleep_time="04:00"' >> /usr/local/bin/start.sh \
