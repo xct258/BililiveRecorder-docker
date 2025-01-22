@@ -59,7 +59,11 @@ RUN apt-get update \
     && echo '#!/bin/bash' >> /usr/local/bin/start.sh \
     && echo 'schedule_sleep_time="04:00"' >> /usr/local/bin/start.sh \
     && echo 'while true; do' >> /usr/local/bin/start.sh \
-    && echo '  \$FILE_BACKUP_SH > /rec/backup.log 2>&1' >> /usr/local/bin/start.sh \
+    && echo '  echo "\$(date)" > /rec/backup.log 2>&1' >> /usr/local/bin/start.sh \
+    && echo '  echo "----------------------------" >> /rec/backup.log 2>&1' >> /usr/local/bin/start.sh \
+    && echo '  \$FILE_BACKUP_SH >> /rec/backup.log 2>&1' >> /usr/local/bin/start.sh \
+    && echo '  echo "----------------------------" >> /rec/backup.log 2>&1' >> /usr/local/bin/start.sh \
+    && echo '  echo "\$(date)" >> /rec/backup.log 2>&1' >> /usr/local/bin/start.sh \
     && echo '  current_date=\$(date +%Y-%m-%d)' >> /usr/local/bin/start.sh \
     && echo '  target_time="\${current_date} \$schedule_sleep_time"' >> /usr/local/bin/start.sh \
     && echo '  time_difference=\$(( \$(date -d "\$target_time" +%s) - \$(date +%s) ))' >> /usr/local/bin/start.sh \
