@@ -8,7 +8,7 @@ ENV TZ=Asia/Shanghai
 
 # 安装必要的依赖项
 RUN apt-get update \
-    && apt-get install -y wget git curl nano jq bc tar xz-utils ffmpeg fontconfig \
+    && apt-get install -y wget git curl nano jq bc tar xz-utils ffmpeg pciutils fontconfig \
     && mkdir -p /root/.fonts/ \
     && wget -O /root/.fonts/seguiemj.ttf https://raw.githubusercontent.com/xct258/BililiveRecorder-docker/refs/heads/main/字体/seguiemj.ttf \
     && wget -O /root/.fonts/微软雅黑.ttf https://raw.githubusercontent.com/xct258/BililiveRecorder-docker/refs/heads/main/字体/微软雅黑.ttf \
