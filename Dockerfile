@@ -12,7 +12,7 @@ RUN apt-get update \
     && mkdir -p /root/.fonts/ \
     && wget -O /root/.fonts/seguiemj.ttf https://raw.githubusercontent.com/xct258/BililiveRecorder-docker/refs/heads/main/字体/seguiemj.ttf \
     && wget -O /root/.fonts/微软雅黑.ttf https://raw.githubusercontent.com/xct258/BililiveRecorder-docker/refs/heads/main/字体/微软雅黑.ttf \
-    && fc-cache -f -v
+    && fc-cache -f -v \
     && mkdir -p /root/tmp \
     && echo '#!/bin/bash' >> /root/tmp/1.sh \
     && echo 'arch=$(uname -m | grep -i -E "x86_64|aarch64")' >> /root/tmp/1.sh \
