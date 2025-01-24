@@ -57,7 +57,7 @@ RUN apt-get update \
     && echo '    SCHEDULER_SCRIPT="/usr/local/bin/执行视频备份脚本.sh"' >> /usr/local/bin/start.sh \
     && echo 'cat << EOF > "$SCHEDULER_SCRIPT"' >> /usr/local/bin/start.sh \
     && echo '#!/bin/bash' >> /usr/local/bin/start.sh \
-    && echo 'schedule_sleep_time="04:00"' >> /usr/local/bin/start.sh \
+    && echo 'schedule_sleep_time="02:00"' >> /usr/local/bin/start.sh \
     && echo 'while true; do' >> /usr/local/bin/start.sh \
     && echo '  echo "\$(date)" > /rec/backup.log 2>&1' >> /usr/local/bin/start.sh \
     && echo '  echo "----------------------------" >> /rec/backup.log 2>&1' >> /usr/local/bin/start.sh \
