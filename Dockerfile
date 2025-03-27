@@ -146,7 +146,7 @@ RUN apt-get update \
     && echo '    $SCHEDULER_SCRIPT' >> /usr/local/bin/start.sh \
     && echo 'else' >> /usr/local/bin/start.sh \
     # 提示用户备份脚本不存在
-    && echo '    echo "备份脚本不存在，可以通过FILE_BACKUP_SH变量指定一个sh脚本来备份录制的视频"' >> /usr/local/bin/start.sh \
+    && echo '    echo "备份脚本不存在，可以在启动时指定FILE_BACKUP_SH变量来执行一个sh脚本备份录制的视频"' >> /usr/local/bin/start.sh \
     && echo 'fi' >> /usr/local/bin/start.sh \
     # 保持容器运行
     && echo 'tail -f /dev/null' >> /usr/local/bin/start.sh \
