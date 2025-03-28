@@ -13,7 +13,7 @@ ENV TZ=Asia/Shanghai
 # 安装构建所需的相关依赖
 RUN apt-get update \
     # 安装必要的软件包
-    && apt-get install -y wget git curl nano jq bc tar xz-utils ffmpeg pciutils fontconfig python3-pip \
+    && apt-get install -y wget git curl nano jq bc tar xz-utils ffmpeg pciutils fontconfig procps python3-pip \
     # 创建字体目录
     && mkdir -p /root/.fonts/ \
     # 下载 Segoe Emoji 字体
@@ -63,56 +63,62 @@ RUN apt-get update \
     && echo '    if [ -z "$Bililive_USER" ]; then' >> /usr/local/bin/start.sh \
     && echo '        Bililive_USER="xct258"' >> /usr/local/bin/start.sh \
     && echo '        echo Bililive_USER="$Bililive_USER" > /root/.credentials' >> /usr/local/bin/start.sh \
-    && echo '        echo "当前录播姬用户名:"' >> /usr/local/bin/start.sh \
-    && echo '        echo "$Bililive_USER"' >> /usr/local/bin/start.sh \
     && echo '    else' >> /usr/local/bin/start.sh \
     && echo '        echo Bililive_USER="$Bililive_USER" > /root/.credentials' >> /usr/local/bin/start.sh \
-    && echo '        echo "当前录播姬用户名："' >> /usr/local/bin/start.sh \
-    && echo '        echo "$Bililive_USER"' >> /usr/local/bin/start.sh \
     && echo '    fi' >> /usr/local/bin/start.sh \
     && echo '    if [ -z "$Bililive_PASS" ]; then' >> /usr/local/bin/start.sh \
     && echo '        Bililive_PASS=$(openssl rand -base64 12)' >> /usr/local/bin/start.sh \
     && echo '        echo Bililive_PASS="$Bililive_PASS" >> /root/.credentials' >> /usr/local/bin/start.sh \
-    && echo '        echo "没有指定密码，可以通过Bililive_PASS变量指定，当前录播姬密码（随机）:"' >> /usr/local/bin/start.sh \
-    && echo '        echo "$Bililive_PASS"' >> /usr/local/bin/start.sh \
     && echo '    else' >> /usr/local/bin/start.sh \
     && echo '        Bililive_PASS=$Bililive_PASS >> /root/.credentials' >> /usr/local/bin/start.sh \
-    && echo '        echo "当前录播姬密码:"' >> /usr/local/bin/start.sh \
-    && echo '        echo "$Bililive_PASS"' >> /usr/local/bin/start.sh \
     && echo '    fi' >> /usr/local/bin/start.sh \
     && echo '    if [ -z "$Biliup_PASS" ]; then' >> /usr/local/bin/start.sh \
     && echo '        Biliup_PASS=$(openssl rand -base64 12)' >> /usr/local/bin/start.sh \
     && echo '        echo Biliup_PASS="$Biliup_PASS" >> /root/.credentials' >> /usr/local/bin/start.sh \
-    && echo '        echo "biliup默认用户名为："' >> /usr/local/bin/start.sh \
-    && echo '        echo "biliup"' >> /usr/local/bin/start.sh \
-    && echo '        echo "当前biliup密码（随机）:"' >> /usr/local/bin/start.sh \
-    && echo '        echo "$Biliup_PASS"' >> /usr/local/bin/start.sh \
     && echo '    else' >> /usr/local/bin/start.sh \
     && echo '        Biliup_PASS=$Biliup_PASS >> /root/.credentials' >> /usr/local/bin/start.sh \
-    && echo '        echo "biliup默认用户名为："' >> /usr/local/bin/start.sh \
-    && echo '        echo "biliup"' >> /usr/local/bin/start.sh \
-    && echo '        echo "当前biliup密码:"' >> /usr/local/bin/start.sh \
-    && echo '        echo "$Biliup_PASS"' >> /usr/local/bin/start.sh \
     && echo '    fi' >> /usr/local/bin/start.sh \
     && echo 'fi' >> /usr/local/bin/start.sh \
     # 创建录播姬工作目录
     && echo 'mkdir -p /rec/录播姬' >> /usr/local/bin/start.sh \
     # 启动 BililiveRecorder
     && echo '/root/BililiveRecorder/BililiveRecorder.Cli run --bind "http://*:2356" --http-basic-user "$Bililive_USER" --http-basic-pass "$Bililive_PASS" "/rec/录播姬" > /dev/null 2>&1 &' >> /usr/local/bin/start.sh \
+    # 检查录播姬是否启动成功
+    && echo 'sleep 2' >> /usr/local/bin/start.sh \
+    && echo 'if ! pgrep -f "BililiveRecorder.Cli" > /dev/null; then' >> /usr/local/bin/start.sh \
+    && echo '  echo "------------------------------------"' >> /usr/local/bin/start.sh \
+    && echo '  echo "$(date)"' >> /usr/local/bin/start.sh \
+    && echo '  echo "录播姬启动失败"' >> /usr/local/bin/start.sh \
+    && echo '  echo "------------------------------------"' >> /usr/local/bin/start.sh \
+    && echo 'else' >> /usr/local/bin/start.sh \
+    && echo '  echo "------------------------------------"' >> /usr/local/bin/start.sh \
+    && echo '  echo "$(date)"' >> /usr/local/bin/start.sh \
+    && echo '  echo "录播姬运行中"' >> /usr/local/bin/start.sh \
+    && echo '  echo "------------------------------------"' >> /usr/local/bin/start.sh \
+    && echo 'fi' >> /usr/local/bin/start.sh \
     # 创建biliup工作目录
     && echo 'mkdir -p /rec/biliup' >> /usr/local/bin/start.sh \
     # 切换到biliup工作目录
     && echo 'cd /rec/biliup' >> /usr/local/bin/start.sh \
     # 启动biliup
     && echo 'if [ -f ./watch_process.pid ]; then' >> /usr/local/bin/start.sh \
-    && echo 'rm -rf ./watch_process.pid' >> /usr/local/bin/start.sh \
+    && echo '  rm -rf ./watch_process.pid' >> /usr/local/bin/start.sh \
     && echo 'fi' >> /usr/local/bin/start.sh \
     && echo 'biliup --password "$Biliup_PASS" start > /dev/null 2>&1' >> /usr/local/bin/start.sh \
+    && echo 'if [ $? -ne 0 ]; then' >> /usr/local/bin/start.sh \
+    && echo '  echo "$(date)"' >> /usr/local/bin/start.sh \
+    && echo '  echo "biliup启动失败"' >> /usr/local/bin/start.sh \
+    && echo 'else' >> /usr/local/bin/start.sh \
+    && echo '  echo "------------------------------------"' >> /usr/local/bin/start.sh \
+    && echo '  echo "$(date)"' >> /usr/local/bin/start.sh \
+    && echo '  echo "biliup运行中"' >> /usr/local/bin/start.sh \
+    && echo '  echo "------------------------------------"' >> /usr/local/bin/start.sh \
+    && echo 'fi' >> /usr/local/bin/start.sh \
     # 检查备份脚本是否存在
     && echo '# 检查备份脚本是否存在' >> /usr/local/bin/start.sh \
-    && echo 'if [ -f "$FILE_BACKUP_SH" ]; then' >> /usr/local/bin/start.sh \
+    && echo 'if [ -f "/rec/$FILE_BACKUP_SH" ]; then' >> /usr/local/bin/start.sh \
     # 赋予备份脚本执行权限
-    && echo '    chmod +x "$FILE_BACKUP_SH"' >> /usr/local/bin/start.sh \
+    && echo '    chmod +x "/rec/$FILE_BACKUP_SH"' >> /usr/local/bin/start.sh \
     # 提示备份脚本正在执行
     && echo '    echo "备份脚本执行中"' >> /usr/local/bin/start.sh \
     # 创建调度脚本
@@ -125,7 +131,7 @@ RUN apt-get update \
     && echo 'while true; do' >> /usr/local/bin/start.sh \
     && echo '  echo "\$(date)" > /rec/backup.log 2>&1' >> /usr/local/bin/start.sh \
     && echo '  echo "----------------------------" >> /rec/backup.log 2>&1' >> /usr/local/bin/start.sh \
-    && echo '  \$FILE_BACKUP_SH >> /rec/backup.log 2>&1' >> /usr/local/bin/start.sh \
+    && echo '  /rec/\$FILE_BACKUP_SH >> /rec/backup.log 2>&1' >> /usr/local/bin/start.sh \
     && echo '  echo "----------------------------" >> /rec/backup.log 2>&1' >> /usr/local/bin/start.sh \
     && echo '  echo "\$(date)" >> /rec/backup.log 2>&1' >> /usr/local/bin/start.sh \
     && echo '  current_date=\$(date +%Y-%m-%d)' >> /usr/local/bin/start.sh \
@@ -146,12 +152,25 @@ RUN apt-get update \
     && echo '    $SCHEDULER_SCRIPT' >> /usr/local/bin/start.sh \
     && echo 'else' >> /usr/local/bin/start.sh \
     # 提示用户备份脚本不存在
+    && echo '    echo "------------------------------------"' >> /usr/local/bin/start.sh \
     && echo '    echo "备份脚本不存在，可以在启动时指定FILE_BACKUP_SH变量来执行一个sh脚本备份录制的视频"' >> /usr/local/bin/start.sh \
+    && echo '    echo "------------------------------------"' >> /usr/local/bin/start.sh \
     && echo 'fi' >> /usr/local/bin/start.sh \
+    && echo 'echo "------------------------------------"' >> /usr/local/bin/start.sh \
+    && echo 'echo "当前录播姬用户名:"' >> /usr/local/bin/start.sh \
+    && echo 'echo "$Bililive_USER"' >> /usr/local/bin/start.sh \
+    && echo 'echo "当前录播姬密码:"' >> /usr/local/bin/start.sh \
+    && echo 'echo "$Bililive_PASS"' >> /usr/local/bin/start.sh \
+    && echo 'echo "------------------------------------"' >> /usr/local/bin/start.sh \
+    && echo 'echo "------------------------------------"' >> /usr/local/bin/start.sh \
+    && echo 'echo "biliup默认用户名为："' >> /usr/local/bin/start.sh \
+    && echo 'echo "biliup"' >> /usr/local/bin/start.sh \
+    && echo 'echo "当前biliup密码:"' >> /usr/local/bin/start.sh \
+    && echo 'echo "$Biliup_PASS"' >> /usr/local/bin/start.sh \
+    && echo 'echo "------------------------------------"' >> /usr/local/bin/start.sh \
     # 保持容器运行
     && echo 'tail -f /dev/null' >> /usr/local/bin/start.sh \
     # 赋予启动脚本执行权限
     && chmod +x /usr/local/bin/start.sh
-
 # 设置容器启动时执行的命令
 ENTRYPOINT ["/usr/local/bin/start.sh"]
