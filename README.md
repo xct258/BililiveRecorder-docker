@@ -1,4 +1,4 @@
-# 录播姬的docker镜像
+# 录播姬和biliup的docker镜像
 启动示例：
 ```
 docker run -d   \
@@ -12,3 +12,4 @@ docker run -d   \
     -p 19159:19159 `# biliup默认端口` \
     xct258/debian-bililive
 ```
+
